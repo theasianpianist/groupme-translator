@@ -16,8 +16,11 @@ def webhook():
 
   # We don't want to reply to ourselves!
   if data['name'] != 'Hello bot':
-    msg = '{}, {}'.format(data['name'],data['sender_id'])
-    send_message(msg)
+    oMsg = data['text']
+    if " yu" in oMsg or " lits" in oMsg:
+    	msg = oMsg.replace(" yu", " you")
+    	msg = msg.replace(" lits", "literally")
+    	send_message(msg)
 
   return "ok", 200
 

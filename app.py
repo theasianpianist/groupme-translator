@@ -41,6 +41,12 @@ def parse_message(oMsg):
 	LitsLoc = [m.start() for m in re.finditer('Lits', msg)]
 	if LitsLoc:
 		msg = replace_word("Lits", "Literally", msg, LitsLoc)
+	axLoc = [me.start() for m in re.finditer('ax', msg)]
+	if axLoc:
+		msg = replace_word("ax", "actually", msg, axLoc)
+	AxLoc = [me.start() for m in re.finditer('Ax', msg)]
+	if AxLoc:
+		msg = replace_word("Ax", "Actually", msg, AxLoc)
 	if needsTranslate:
 		send_message(msg)
 

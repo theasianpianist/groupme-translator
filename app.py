@@ -12,7 +12,8 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST'])
 
-needsTranslate = False
+global needsTranslate 
+
 def webhook():
   data = request.get_json()
   #log('Recieved {}'.format(data))
@@ -26,6 +27,8 @@ def webhook():
 
 def parse_message(oMsg):
 	msg = oMsg
+	global needsTranslate
+	needsTranslate = False
 	yuLoc = [m.start() for m in re.finditer('yu', msg)]
 	if yuLoc:
 		msg = replace_word("yu", "you", msg, yuLoc)
@@ -38,11 +41,12 @@ def parse_message(oMsg):
 	LitsLoc = [m.start() for m in re.finditer('Lits', msg)]
 	if LitsLoc:
 		msg = replace_word("Lits", "Literally", msg, LitsLoc)
-
 	if needsTranslate:
 		send_message(msg)
 
 def replace_word(word, replacement, oMsg, locList):
+	global needsTranslate
+	needsTranslate = False
 	msg = oMsg
 	length = len(word)
 	for loc in reversed(locList):

@@ -12,7 +12,7 @@ app = Flask(__name__)
 @app.route('/', methods=['POST'])
 def webhook():
   data = request.get_json()
-  log('Recieved {}'.format(data))
+  #log('Recieved {}'.format(data))
 
   # We don't want to reply to ourselves!
   if data['name'] != 'apnorton-test-bot':
@@ -29,4 +29,4 @@ def send_message(msg):
           'text'   : msg,
          }
   request = Request(url, urlencode(data).encode())
-  json = urlopen(request).read().decode()
+  json = urlopen(request).read().decode()	

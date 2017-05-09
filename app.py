@@ -45,6 +45,15 @@ def parse_message(oMsg):
 	AxLoc = [m.start() for m in re.finditer('Ax', msg)]
 	if AxLoc:
 		msg = replace_word("Ax", "Actually", msg, AxLoc)
+	gclLoc = [m.start() for m in re.finditer('gcl', msg)]
+	if gclLoc:
+		msg = replace_word("gcl", "gfc", msg, gclLoc)
+	GCLLoc = [m.start() for m in re.finditer('GCL', msg)]
+	if GCLLoc:
+		msg = replace_word("GCL", "GFC", msg, GCLLoc)
+	GclLoc = [m.start() for m in re.finditer('Gcl', msg)]
+	if GclLoc:
+		msg = replace_word("Gcl", "Gfc", msg, GclLoc)
 	if needsTranslate:
 		send_message(msg)
 
@@ -58,9 +67,6 @@ def replace_word(word, replacement, oMsg, locList):
 			msg = msg[0:loc] + replacement + msg[loc + length:]
 			needsTranslate = True
 	return msg
-
-
-
 
 
 def send_message(msg):

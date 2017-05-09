@@ -16,7 +16,7 @@ def webhook():
 
   # We don't want to reply to ourselves!
   if data['name'] != 'Hello bot':
-    msg = '{}, you sent "{}".'.format(data['name'], data['text'])
+    msg = '{}, {}'.format(data['name'],data['sender_id'])
     send_message(msg)
 
   return "ok", 200

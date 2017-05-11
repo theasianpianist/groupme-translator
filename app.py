@@ -49,8 +49,7 @@ def parse_message(oMsg):
 		msg = replace_word("lamo", "lmao", msg, lamoLoc)
 
 	if needsTranslate:
-		#send_message(msg)
-		print(msg)
+		send_message(msg)
 
 def replace_word(word, replacement, oMsg, locList):
 	global needsTranslate
@@ -60,10 +59,6 @@ def replace_word(word, replacement, oMsg, locList):
 	origLength = len(word)
 	for loc in reversed(locList):
 		if loc == 0 or msg[loc - 1] in [".", ",", ";", "!", ":", " "]:
-			# msg = msg[0:loc] + replacement + msg[loc + length:]
-			#01234
-			#i yu
-			#i y
 			msg = msg[0:loc + origLength] + "x" * (abs(replaceLength - origLength)) + msg[loc + origLength:] #Inserts placeholder letters if replacement word is longer than original
 			needsTranslate = True
 			replaceIndex = 0

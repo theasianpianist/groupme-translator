@@ -87,7 +87,7 @@ def replace_word(word, replacement, oMsg, locList):
 	msg = oMsg
 	length = len(word)
 	for loc in reversed(locList):
-		if loc == 0 or msg[loc - 1] in [".", ",", ";", "!", ":"]:
+		if loc == 0 or msg[loc - 1] in [".", ",", ";", "!", ":", " "]:
 			msg = msg[0:loc] + replacement + msg[loc + length:]
 			needsTranslate = True
 	return msg

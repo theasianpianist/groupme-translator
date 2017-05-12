@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 def webhook():
   data = request.get_json()
-  #log('Recieved {}'.format(data))
+  log('Recieved {}'.format(data))
 
   # We don't want to reply to ourselves!
   if data['name'] != 'Translator':
@@ -58,7 +58,7 @@ def replace_word(word, replacement, oMsg, locList):
 	replaceLength = len(replacement)
 	origLength = len(word)
 	for loc in reversed(locList):
-		if loc == 0 or msg[loc - 1] in [".", ",", ";", "!", ":", " "]:
+		if (loc == 0 or msg[loc - 1] in [".", ",", ";", "!", ":", " "]) and (loc + origLength >= len(msg) or msg[loc + origLength] == " " or msg[loc + origLength] == msg[loc + origLength - 1]):
 			msg = msg[0:loc + origLength] + "x" * (abs(replaceLength - origLength)) + msg[loc + origLength:] #Inserts placeholder letters if replacement word is longer than original
 			needsTranslate = True
 			replaceIndex = 0
@@ -90,5 +90,14 @@ def send_message(msg):
   request = Request(url, urlencode(data).encode())
   json = urlopen(request).read().decode()
 
+def log(msg):
+  print(str(msg))
+  sys.stdout.flush()
+
 if __name__ == "__main__":
-	parse_message("YU AX lits gcl lamo")
+	parse_message("YU ax lits gcl lamo")
+	parse_message("yuuuu")
+	parse_message("yukon")
+	parse_message("litssss")
+	parse_message("lits")
+

@@ -27,26 +27,12 @@ def parse_message(oMsg):
 	msg = oMsg
 	global needsTranslate
 	needsTranslate = False
-
-	yuLoc = [m.start() for m in re.finditer('yu', msg, re.IGNORECASE)]
-	if yuLoc:
-		msg = replace_word("yu", "you", msg, yuLoc)
-
-	litsLoc = [m.start() for m in re.finditer('lits', msg, re.IGNORECASE)]
-	if litsLoc:
-		msg = replace_word("lits", "literally", msg, litsLoc)
-
-	axLoc = [m.start() for m in re.finditer('ax', msg, re.IGNORECASE)]
-	if axLoc:
-		msg = replace_word("ax", "actually", msg, axLoc)
-
-	gclLoc = [m.start() for m in re.finditer('gcl', msg, re.IGNORECASE)]
-	if gclLoc:
-		msg = replace_word("gcl", "gfc", msg, gclLoc)
-
-	lamoLoc = [m.start() for m in re.finditer('lamo', msg, re.IGNORECASE)]
-	if lamoLoc:
-		msg = replace_word("lamo", "lmao", msg, lamoLoc)
+	origWords = ["yu", "lits", "ax", "gcl", "lamo", "yur"]
+	replaceWords = ["you", "literally", "actually", "gfc", "lmao", "your"]
+	for i in range(len(origWords)):
+		wordLoc = [m.start() for m in re.finditer(origWords[i], msg, re.IGNORECASE)]
+		if wordLoc:
+			msg = replace_word(origWords[i], replaceWords[i], msg, wordLoc)
 
 	if needsTranslate:
 		send_message(msg)
@@ -100,4 +86,5 @@ if __name__ == "__main__":
 	parse_message("yukon")
 	parse_message("litssss")
 	parse_message("lits")
+	parse_message("yur")
 

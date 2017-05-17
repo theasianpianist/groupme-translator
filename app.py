@@ -2,26 +2,27 @@ import os
 import sys
 import json
 import re
+import enchant
 
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
+#
+# from flask import Flask, request
+#
+# app = Flask(__name__)
 
-from flask import Flask, request
+# @app.route('/', methods=['POST'])
 
-app = Flask(__name__)
-
-@app.route('/', methods=['POST'])
-
-def webhook():
-  data = request.get_json()
-  log('Recieved {}'.format(data))
-
-  # We don't want to reply to ourselves!
-  if data['name'] != 'Translator':
-    parse_message(data['text'])
-
-
-  return "ok", 200
+# def webhook():
+#   data = request.get_json()
+#   log('Recieved {}'.format(data))
+#
+#   # We don't want to reply to ourselves!
+#   if data['name'] != 'Translator':
+#     parse_message(data['text'])
+#
+#
+#   return "ok", 200
 
 def parse_message(oMsg):
 	msg = oMsg
@@ -33,9 +34,32 @@ def parse_message(oMsg):
 		wordLoc = [m.start() for m in re.finditer(origWords[i], msg, re.IGNORECASE)]
 		if wordLoc:
 			msg = replace_word(origWords[i], replaceWords[i], msg, wordLoc)
-
+	msg = dedup_letters(msg)
 	if needsTranslate:
-		send_message(msg)
+		#send_message(msg)
+		print(msg)
+
+def dedup_letters(oMsg):
+	global needsTranslate
+	d = enchant.Dict("en_US")
+	msg = oMsg.split(" ")
+	newMsg = []
+	for word in msg:
+		tempWord = word
+		while tempWord[len(tempWord) - 1:len(tempWord)] == tempWord[len(tempWord) - 2: len(tempWord) - 1] and tempWord[len(tempWord) - 2 : len(tempWord) - 1] == tempWord[len(tempWord) - 3 : len(tempWord) - 2]:
+			tempWord = tempWord[:len(tempWord)-1]
+		if not d.check(tempWord):
+			tempWord = d.suggest(tempWord)[0]
+			needsTranslate = True
+		newMsg.append(tempWord)
+	return rebuild_sentence(newMsg)
+
+def rebuild_sentence(wordList):
+	message = ""
+	for word in wordList:
+		message += word + " "
+	message = message[:len(message) - 1]
+	return message
 
 def replace_word(word, replacement, oMsg, locList):
 	global needsTranslate
@@ -66,25 +90,20 @@ def replace_word(word, replacement, oMsg, locList):
 	return msg
 
 
-def send_message(msg):
-  url  = 'https://api.groupme.com/v3/bots/post'
-
-  data = {
-          'bot_id' : os.getenv('GROUPME_BOT_ID'),
-          'text'   : msg,
-         }
-  request = Request(url, urlencode(data).encode())
-  json = urlopen(request).read().decode()
+# def send_message(msg):
+#   url  = 'https://api.groupme.com/v3/bots/post'
+#
+#   data = {
+#           'bot_id' : os.getenv('GROUPME_BOT_ID'),
+#           'text'   : msg,
+#          }
+#   request = Request(url, urlencode(data).encode())
+#   json = urlopen(request).read().decode()
 
 def log(msg):
   print(str(msg))
   sys.stdout.flush()
 
 if __name__ == "__main__":
-	parse_message("YU ax lits gcl lamo")
-	parse_message("yuuuu")
-	parse_message("yukon")
-	parse_message("litssss")
-	parse_message("lits")
-	parse_message("yur")
+	parse_message("i also asked yu if yu had a linked in but okayyyyy")
 

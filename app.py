@@ -39,12 +39,13 @@ def parse_message(oMsg):
 
 def replace_word(word, replacement, oMsg, locList):
 	global needsTranslate
+	punctuation = [" ", "~", "`", "!", "#", "$", "%", "^", "&", "*","(",")","_","-","=","+","[","{","]","}","|","\\",";",":","\'","\"",",","<",".",">","/","?"]
 	needsTranslate = False
 	msg = oMsg
 	replaceLength = len(replacement)
 	origLength = len(word)
 	for loc in reversed(locList):
-		if (loc == 0 or msg[loc - 1] in [".", ",", ";", "!", ":", " "]) and (loc + origLength >= len(msg) or msg[loc + origLength] == " " or msg[loc + origLength] == msg[loc + origLength - 1]):
+		if (loc == 0 or msg[loc - 1] in punctuation) and (loc + origLength >= len(msg) or msg[loc + origLength] in punctuation or msg[loc + origLength] == msg[loc + origLength - 1]):
 			msg = msg[0:loc + origLength] + "x" * (abs(replaceLength - origLength)) + msg[loc + origLength:] #Inserts placeholder letters if replacement word is longer than original
 			needsTranslate = True
 			replaceIndex = 0
@@ -81,10 +82,6 @@ def log(msg):
   sys.stdout.flush()
 
 if __name__ == "__main__":
-	parse_message("YU ax lits gcl lamo")
-	parse_message("yuuuu")
-	parse_message("yukon")
-	parse_message("litssss")
-	parse_message("lits")
-	parse_message("yur")
+	parse_message("YU, ax lits gcl lamo")
+	parse_message("\"yu\"")
 

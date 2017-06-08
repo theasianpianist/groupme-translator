@@ -1,6 +1,5 @@
 import os
 import sys
-import json
 import re
 
 from urllib.parse import urlencode
@@ -29,14 +28,14 @@ def parse_message(oMsg):
 	needsTranslate = False
 	origWords = ["yu", "lits", "ax", "gcl", "lamo", "yur", "jus", "deth"]
 	replaceWords = ["you", "literally", "actually", "gfc", "lmao", "your", "just", "death"]
-	for i in range(len(origWords)):
-		wordLoc = [m.start() for m in re.finditer(origWords[i], msg, re.IGNORECASE)]
+	wordDict = dict(zip(origWords, replaceWords))
+	for word in wordDict:
+		wordLoc = [m.start() for m in re.finditer(word, msg, re.IGNORECASE)]
 		if wordLoc:
-			msg = replace_word(origWords[i], replaceWords[i], msg, wordLoc)
+			msg = replace_word(word, wordDict[word], msg, wordLoc)
 
 	if needsTranslate:
 		send_message(msg)
-
 def replace_word(word, replacement, oMsg, locList):
 	global needsTranslate
 	punctuation = [" ", "~", "`", "!", "#", "$", "%", "^", "&", "*","(",")","_","-","=","+","[","{","]","}","|","\\",";",":","\'","\"",",","<",".",">","/","?"]

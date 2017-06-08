@@ -27,8 +27,8 @@ def parse_message(oMsg):
 	msg = oMsg
 	global needsTranslate
 	needsTranslate = False
-	origWords = ["yu", "lits", "ax", "gcl", "lamo", "yur"]
-	replaceWords = ["you", "literally", "actually", "gfc", "lmao", "your"]
+	origWords = ["yu", "lits", "ax", "gcl", "lamo", "yur", "jus", "deth"]
+	replaceWords = ["you", "literally", "actually", "gfc", "lmao", "your", "just", "death"]
 	for i in range(len(origWords)):
 		wordLoc = [m.start() for m in re.finditer(origWords[i], msg, re.IGNORECASE)]
 		if wordLoc:

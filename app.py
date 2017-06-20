@@ -13,8 +13,9 @@ app = Flask(__name__)
 
 def webhook():
   data = request.get_json()
-  log('Recieved {}'.format(data))
 
+  if data['sender_id'] == "19116725":
+	  log(data['text'])
   # We don't want to reply to ourselves!
   if data['name'] != 'Translator':
     parse_message(data['text'])
